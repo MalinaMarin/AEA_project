@@ -112,8 +112,8 @@ class ACO:
             self.weight = weight
             self.ph = initial_ph
 
-    def __init__(self, colonysize=100, alpha=1.2, beta=3.1,
-                 rho=0.1, ph_depozit_w=5.0, initial_pheromone=1.0, steps=2, cities_no=None,
+    def __init__(self, colonysize=100, alpha=2.2, beta=3.1,
+                 rho=0.1, ph_depozit_w=0.1, initial_pheromone=1.0, steps=100, cities_no=None,
                  ct_customized=2):
         self.colony_size = colonysize
         self.rho = rho
@@ -160,8 +160,8 @@ class ACO:
                 self.truck_ph[i] *= (1.0 - self.rho)
 
 
-colony_size = 100
-steps = 70
+colony_size = 200
+steps = 100
 
 path = 'uniform/'
 data_paths = ["uniform/uniform-80-n50.txt"]
@@ -171,7 +171,7 @@ nodes = points.T
 
 all_distances = []
 best_distance = float("inf")
-best_tour = ACO(colonysize=colony_size, cities_no=nodes)
+best_tour = ACO(colonysize=colony_size, cities_no=nodes, steps=steps)
 for i in range(30):
     acs = ACO(colonysize=colony_size, cities_no=nodes)
     acs.do_aco()
@@ -179,7 +179,16 @@ for i in range(30):
     if acs.best_solution < best_distance:
         best_tour = copy.deepcopy(acs)
         best_distance = acs.best_solution
+        best_itinerary = acs.best_itinerary
 
 print(all_distances)
 print(mean(all_distances))
 print(best_distance)
+print(best_itinerary[0])
+
+for obj in best_itinerary[1]:
+    print(obj.visited_node)
+    print("start")
+    print(obj.starting_node)
+    print("recover")
+    print(obj.recover_node)
